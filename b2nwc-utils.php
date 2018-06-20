@@ -15,7 +15,7 @@ function B2NWC__generate_new_B2Ncoin_payment_id ($b2bwc_settings=false, $order_i
   if (!$b2bwc_settings)
     $b2bwc_settings = B2NWC__get_settings ();
 
-  $wallet_api = New ForkNoteWalletd("http://127.0.0.1:18888");
+  $wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");
   $new_b2n_payment_id = $wallet_api->makePaymentId();
 
   try {
@@ -110,7 +110,7 @@ function B2NWC__getreceivedbyaddress_info ($address_request_array, $b2bwc_settin
 	$api_timeout            = $address_request_array['api_timeout'];
 
   $funds_received = false;
-  $fnw = New ForkNoteWalletd("http://127.0.0.1:18888");
+  $fnw = New ForkNoteWalletd("http://127.0.0.1:19070");
   $status = $fnw->getStatus();
 
   $t = $fnw->getTransactions( $status["blockCount"] - 50000, false, 50000, $b2n_payment_id, [$b2n_address]);
@@ -127,7 +127,7 @@ function B2NWC__getreceivedbyaddress_info ($address_request_array, $b2bwc_settin
         $funds_received = $bt['amount'];
         $blockIndex = $bt['blockIndex'];
         if (is_numeric($funds_received)) {
-          $funds_received = sprintf("%.12f", $funds_received / 1000000000000.0);
+          $funds_received = sprintf("%.12f", $funds_received / 100000000.0);
           $confirmations = ($status["blockCount"] - $blockIndex);
           //echo "Recieved: $funds_received in block: $blockIndex ($confirmations confirmations) " .$transaction['blockHash'] ."<br>\n";
           if ($confirmations >= $required_confirmations)
@@ -484,7 +484,7 @@ function B2NWC__is_gateway_valid_for_use (&$ret_reason_message=NULL)
           $address = $b2bwc_settings['address'];
 
           try{
-            $wallet_api = New ForkNoteWalletd("http://127.0.0.1:18888");
+            $wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");
             $address_balance = $wallet_api->getBalance($address);
           }
           catch(Exception $e) {

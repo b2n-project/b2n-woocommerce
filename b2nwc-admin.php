@@ -71,7 +71,7 @@ function B2NWC__withdraw ()
     $address = $b2bwc_settings['address'];
 
     try{
-      $wallet_api = New ForkNoteWalletd("http://127.0.0.1:18888");
+      $wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");
       $address_balance = $wallet_api->getBalance($address);
     }
     catch(Exception $e) {
@@ -83,11 +83,11 @@ function B2NWC__withdraw ()
     } else {
       $address_balance = $address_balance['availableBalance'];
       //round ( float $val [, int $precision = 0 [, int $mode = PHP_ROUND_HALF_UP ]] )
-      $display_address_balance  = sprintf("%.4f", $address_balance  / 1000000000000.0); 
+      $display_address_balance  = sprintf("%.4f", $address_balance  / 100000000.0); 
       $withdraw_fee = 100000000; 
-      $display_fee  = sprintf("%.4f", $withdraw_fee  / 1000000000000.0);
+      $display_fee  = sprintf("%.4f", $withdraw_fee  / 100000000.0);
       $send_amount = (floor( $address_balance / 100000000 ) * 100000000 ) - 200000000; // Only allows sending 4 decimal places
-      $display_send_amount = sprintf("%.4f", $send_amount  / 1000000000000.0);
+      $display_send_amount = sprintf("%.4f", $send_amount  / 100000000.0);
       $send_address = $_POST["withdraw_address"];
       
       try{

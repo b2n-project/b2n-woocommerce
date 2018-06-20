@@ -102,7 +102,7 @@ function B2NWC__plugins_loaded__load_B2Ncoin_gateway ()
 	    	
 	    	else if ($this->service_provider=='local_wallet')
 	    	{
-	    		$wallet_api = New ForkNoteWalletd("http://127.0.0.1:18888");
+	    		$wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");
 	    		$b2bwc_settings = B2NWC__get_settings();
           		$address = $b2bwc_settings['address'];
 	    		if (!$address)
@@ -398,7 +398,7 @@ function B2NWC__plugins_loaded__load_B2Ncoin_gateway ()
   		$ret_info_array = array();
 
 
-               $wallet_api = New ForkNoteWalletd("http://127.0.0.1:18888");
+               $wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");
 
                $b2ncoin_payment_id = B2NWC__generate_new_B2Ncoin_payment_id($b2bwc_settings, $order_info);
 

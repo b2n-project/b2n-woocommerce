@@ -69,7 +69,7 @@ HHHH;
     $address = $b2bwc_settings['address'];
 
     try{
-      $wallet_api = New ForkNoteWalletd("http://127.0.0.1:18888");
+      $wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");
       $address_balance = $wallet_api->getBalance($address);
     }
     catch(Exception $e) {
@@ -80,11 +80,11 @@ HHHH;
       $address_balance = __("B2Ncoin address is not found in wallet.", 'woocommerce');
     } else {
       $address_pending_balance = $address_balance['lockedAmount'];
-      $address_pending_balance = sprintf("%.12f", $address_pending_balance  / 1000000000000.0);
+      $address_pending_balance = sprintf("%.12f", $address_pending_balance  / 100000000.0);
       $address_balance = $address_balance['availableBalance'];
-      $display_address_balance  = sprintf("%.12f", $address_balance  / 1000000000000.0);
+      $display_address_balance  = sprintf("%.12f", $address_balance  / 100000000.0);
       $withdraw_fee = 1000000000;
-      $display_fee  = sprintf("%.12f", $withdraw_fee  / 1000000000000.0);
+      $display_fee  = sprintf("%.12f", $withdraw_fee  / 100000000.0);
     }
 
 
