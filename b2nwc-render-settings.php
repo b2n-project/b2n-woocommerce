@@ -5,7 +5,7 @@ https://github.com/b2n-project/b2n-woocommerce/
 */
 
 // Include everything
-include (dirname(__FILE__) . '/b2bwc-include-all.php');
+include (dirname(__FILE__) . '/b2nwc-include-all.php');
 
 //===========================================================================
 function B2NWC__render_general_settings_page ()   { B2NWC__render_settings_page   ('general'); }
@@ -15,7 +15,7 @@ function B2NWC__render_general_settings_page ()   { B2NWC__render_settings_page 
 //===========================================================================
 function B2NWC__render_settings_page ($menu_page_name)
 {
-   $b2bwc_settings = B2NWC__get_settings ();
+   $b2nwc_settings = B2NWC__get_settings ();
    if (isset ($_POST['button_withdraw']))
       {
       $result = B2NWC__withdraw();
@@ -25,7 +25,7 @@ echo '
 </div>
 ';
       }
-   else if (isset ($_POST['button_update_b2bwc_settings']))
+   else if (isset ($_POST['button_update_b2nwc_settings']))
       {
       B2NWC__update_settings ("", false);
 echo <<<HHHH
@@ -34,7 +34,7 @@ Settings updated!
 </div>
 HHHH;
       }
-   else if (isset($_POST['button_reset_b2bwc_settings']))
+   else if (isset($_POST['button_reset_b2nwc_settings']))
       {
       B2NWC__reset_all_settings (false);
 echo <<<HHHH
@@ -43,7 +43,7 @@ All settings reverted to all defaults
 </div>
 HHHH;
       }
-   else if (isset($_POST['button_reset_partial_b2bwc_settings']))
+   else if (isset($_POST['button_reset_partial_b2nwc_settings']))
       {
       B2NWC__reset_partial_settings (false);
 echo <<<HHHH
@@ -65,8 +65,8 @@ HHHH;
   }
   else
   {
-    $b2bwc_settings = B2NWC__get_settings();
-    $address = $b2bwc_settings['address'];
+    $b2nwc_settings = B2NWC__get_settings();
+    $address = $b2nwc_settings['address'];
 
     try{
       $wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");
@@ -133,15 +133,15 @@ HHHH;
 //===========================================================================
 function B2NWC__render_general_settings_page_html ()
 {
-  $b2bwc_settings = B2NWC__get_settings ();
+  $b2nwc_settings = B2NWC__get_settings ();
   global $g_B2NWC__cron_script_url;
 
 ?>
 
     <form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
       <p class="submit">
-        <input type="submit" class="button-primary"    name="button_update_b2bwc_settings"        value="<?php _e('Save Changes') ?>"             />
-        <input type="submit" class="button-secondary"  style="color:red;" name="button_reset_partial_b2bwc_settings" value="<?php _e('Reset settings') ?>" onClick="return confirm('Are you sure you want to reset settings on this page?');" />
+        <input type="submit" class="button-primary"    name="button_update_b2nwc_settings"        value="<?php _e('Save Changes') ?>"             />
+        <input type="submit" class="button-secondary"  style="color:red;" name="button_reset_partial_b2nwc_settings" value="<?php _e('Reset settings') ?>" onClick="return confirm('Are you sure you want to reset settings on this page?');" />
       </p>
       <table class="form-table">
 
@@ -149,7 +149,7 @@ function B2NWC__render_general_settings_page_html ()
         <tr valign="top">
           <th scope="row">Delete all plugin-specific settings, database tables and data on uninstall:</th>
           <td>
-            <input type="hidden" name="delete_db_tables_on_uninstall" value="0" /><input type="checkbox" name="delete_db_tables_on_uninstall" value="1" <?php if ($b2bwc_settings['delete_db_tables_on_uninstall']) echo 'checked="checked"'; ?> />
+            <input type="hidden" name="delete_db_tables_on_uninstall" value="0" /><input type="checkbox" name="delete_db_tables_on_uninstall" value="1" <?php if ($b2nwc_settings['delete_db_tables_on_uninstall']) echo 'checked="checked"'; ?> />
             <p class="description">If checked - all plugin-specific settings, database tables and data will be removed from Wordpress database upon plugin uninstall (but not upon deactivation or upgrade).</p>
           </td>
         </tr>
@@ -158,7 +158,7 @@ function B2NWC__render_general_settings_page_html ()
           <th scope="row">B2Ncoin Service Provider:</th>
           <td>
             <select name="service_provider" class="select ">
-              <option <?php if ($b2bwc_settings['service_provider'] == 'local_wallet') echo 'selected="selected"'; ?> value="local_wallet">Local wallet (walletd)</option>
+              <option <?php if ($b2nwc_settings['service_provider'] == 'local_wallet') echo 'selected="selected"'; ?> value="local_wallet">Local wallet (walletd)</option>
             </select>
             <p class="description">
               Please select your B2Ncoin service provider and press [Save changes]. Then fill-in necessary details and press [Save changes] again.
@@ -170,7 +170,7 @@ function B2NWC__render_general_settings_page_html ()
         <tr valign="top">
           <th scope="row">Wallet Address:</th>
           <td>
-            <textarea style="width:75%;" name="address"><?php echo $b2bwc_settings['address']; ?></textarea>
+            <textarea style="width:75%;" name="address"><?php echo $b2nwc_settings['address']; ?></textarea>
             <p class="description">
               Set up your local wallet with the instructions for <a href="http://forknote.net/documentation/rpc-wallet/">the ForkNote RPC Wallet</a> or <a href="https://wiki.bytecoin.org/wiki/Bytecoin_RPC_Wallet">Reference(Bytecoin) RPC Wallet</a>. Then copy in one of your wallet addresses.
             </p>
@@ -180,7 +180,7 @@ function B2NWC__render_general_settings_page_html ()
         <tr valign="top">
           <th scope="row">Number of confirmations required before accepting payment:</th>
           <td>
-            <input type="text" name="confs_num" value="<?php echo $b2bwc_settings['confs_num']; ?>" size="4" />
+            <input type="text" name="confs_num" value="<?php echo $b2nwc_settings['confs_num']; ?>" size="4" />
             <p class="description">
               After a transaction is broadcast to the B2Ncoin network, it may be included in a block that is published
               to the network. When that happens it is said that one <a href="https://en.B2Ncoin.it/wiki/Confirmation"><b>confirmation</b></a> has occurred for the transaction.
@@ -193,7 +193,7 @@ function B2NWC__render_general_settings_page_html ()
         <tr valign="top">
           <th scope="row">Payment expiration time (minutes):</th>
           <td>
-            <input type="text" name="assigned_address_expires_in_mins" value="<?php echo $b2bwc_settings['assigned_address_expires_in_mins']; ?>" size="4" />
+            <input type="text" name="assigned_address_expires_in_mins" value="<?php echo $b2nwc_settings['assigned_address_expires_in_mins']; ?>" size="4" />
             <p class="description">
               Payment must recieve the required number of confirmations within this time. This is so that the exchange rate is current.
             </p>
@@ -203,7 +203,7 @@ function B2NWC__render_general_settings_page_html ()
         <tr valign="top">
           <th scope="row">Exchange rate multiplier:</th>
           <td>
-            <input type="text" name="exchange_multiplier" value="<?php echo $b2bwc_settings['exchange_multiplier']; ?>" size="4" />
+            <input type="text" name="exchange_multiplier" value="<?php echo $b2nwc_settings['exchange_multiplier']; ?>" size="4" />
             <p class="description">
               Extra multiplier to apply to convert store default currency to B2Ncoin price.
               <br />Example: 1.05 - will add extra 5% to the total price in B2Ncoins.
@@ -216,7 +216,7 @@ function B2NWC__render_general_settings_page_html ()
         <tr valign="top">
           <th scope="row">Auto-complete paid orders:</th>
           <td>
-            <input type="hidden" name="autocomplete_paid_orders" value="0" /><input type="checkbox" name="autocomplete_paid_orders" value="1" <?php if ($b2bwc_settings['autocomplete_paid_orders']) echo 'checked="checked"'; ?> />
+            <input type="hidden" name="autocomplete_paid_orders" value="0" /><input type="checkbox" name="autocomplete_paid_orders" value="1" <?php if ($b2nwc_settings['autocomplete_paid_orders']) echo 'checked="checked"'; ?> />
             <p class="description">If checked - fully paid order will be marked as 'completed' and '<i>Your order is complete</i>' email will be immediately delivered to customer.
             	<br />If unchecked: store admin will need to mark order as completed manually - assuming extra time needed to ship physical product after payment is received.
 <!--             	<br />Note: virtual/downloadable products will automatically complete upon receiving full payment (so this setting does not have effect in this case). -->
@@ -228,11 +228,11 @@ function B2NWC__render_general_settings_page_html ()
             <th scope="row">Cron job type:</th>
             <td>
               <select name="enable_soft_cron_job" class="select ">
-                <option <?php if ($b2bwc_settings['enable_soft_cron_job'] == '1') echo 'selected="selected"'; ?> value="1">Soft Cron (Wordpress-driven)</option>
-                <option <?php if ($b2bwc_settings['enable_soft_cron_job'] != '1') echo 'selected="selected"'; ?> value="0">Hard Cron (Cpanel-driven)</option>
+                <option <?php if ($b2nwc_settings['enable_soft_cron_job'] == '1') echo 'selected="selected"'; ?> value="1">Soft Cron (Wordpress-driven)</option>
+                <option <?php if ($b2nwc_settings['enable_soft_cron_job'] != '1') echo 'selected="selected"'; ?> value="0">Hard Cron (Cpanel-driven)</option>
               </select>
               <p class="description">
-                <?php if ($b2bwc_settings['enable_soft_cron_job'] != '1') echo '<p style="background-color:#FFC;color:#2A2;"><b>NOTE</b>: Hard Cron job is enabled: make sure to follow instructions below to enable hard cron job at your hosting panel.</p>'; ?>
+                <?php if ($b2nwc_settings['enable_soft_cron_job'] != '1') echo '<p style="background-color:#FFC;color:#2A2;"><b>NOTE</b>: Hard Cron job is enabled: make sure to follow instructions below to enable hard cron job at your hosting panel.</p>'; ?>
                 Cron job will take care of all regular B2Ncoin payment processing tasks, like checking if payments are made and automatically completing the orders.<br />
                 <b>Soft Cron</b>: - Wordpress-driven (runs on behalf of a random site visitor).
                 <br />
@@ -250,8 +250,8 @@ function B2NWC__render_general_settings_page_html ()
       </table>
 
       <p class="submit">
-          <input type="submit" class="button-primary"    name="button_update_b2bwc_settings"        value="<?php _e('Save Changes') ?>"             />
-          <input type="submit" class="button-secondary"  style="color:red;" name="button_reset_partial_b2bwc_settings" value="<?php _e('Reset settings') ?>" onClick="return confirm('Are you sure you want to reset settings on this page?');" />
+          <input type="submit" class="button-primary"    name="button_update_b2nwc_settings"        value="<?php _e('Save Changes') ?>"             />
+          <input type="submit" class="button-secondary"  style="color:red;" name="button_reset_partial_b2nwc_settings" value="<?php _e('Reset settings') ?>" onClick="return confirm('Are you sure you want to reset settings on this page?');" />
       </p>
     </form>
 <?php

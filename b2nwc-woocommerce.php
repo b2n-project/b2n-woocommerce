@@ -13,7 +13,7 @@ License: BipCot NoGov Software License bipcot.org
 
 
 // Include everything
-include (dirname(__FILE__) . '/b2bwc-include-all.php');
+include (dirname(__FILE__) . '/b2nwc-include-all.php');
 
 //---------------------------------------------------------------------------
 // Add hooks and filters
@@ -37,29 +37,29 @@ function B2NWC_activate()
 {
     global  $g_B2NWC__config_defaults;
 
-    $b2bwc_default_options = $g_B2NWC__config_defaults;
+    $b2nwc_default_options = $g_B2NWC__config_defaults;
 
     // This will overwrite default options with already existing options but leave new options (in case of upgrading to new version) untouched.
-    $b2bwc_settings = B2NWC__get_settings ();
+    $b2nwc_settings = B2NWC__get_settings ();
 
-    foreach ($b2bwc_settings as $key=>$value)
-    	$b2bwc_default_options[$key] = $value;
+    foreach ($b2nwc_settings as $key=>$value)
+    	$b2nwc_default_options[$key] = $value;
 
-    update_option (B2NWC_SETTINGS_NAME, $b2bwc_default_options);
+    update_option (B2NWC_SETTINGS_NAME, $b2nwc_default_options);
 
     // Re-get new settings.
-    $b2bwc_settings = B2NWC__get_settings ();
+    $b2nwc_settings = B2NWC__get_settings ();
 
     // Create necessary database tables if not already exists...
-    B2NWC__create_database_tables ($b2bwc_settings);
+    B2NWC__create_database_tables ($b2nwc_settings);
     B2NWC__SubIns ();
 
     //----------------------------------
     // Setup cron jobs
 
-    if ($b2bwc_settings['enable_soft_cron_job'] && !wp_next_scheduled('B2NWC_cron_action'))
+    if ($b2nwc_settings['enable_soft_cron_job'] && !wp_next_scheduled('B2NWC_cron_action'))
     {
-    	$cron_job_schedule_name = $b2bwc_settings['soft_cron_job_schedule_name'];
+    	$cron_job_schedule_name = $b2nwc_settings['soft_cron_job_schedule_name'];
     	wp_schedule_event(time(), $cron_job_schedule_name, 'B2NWC_cron_action');
     }
     //----------------------------------
@@ -96,9 +96,9 @@ function B2NWC_deactivate ()
 // uninstalling
 function B2NWC_uninstall ()
 {
-    $b2bwc_settings = B2NWC__get_settings();
+    $b2nwc_settings = B2NWC__get_settings();
 
-    if ($b2bwc_settings['delete_db_tables_on_uninstall'])
+    if ($b2nwc_settings['delete_db_tables_on_uninstall'])
     {
         // delete all settings.
         delete_option(B2NWC_SETTINGS_NAME);
@@ -119,17 +119,17 @@ function B2NWC_create_menu()
         __('Woo B2Ncoin', B2NWC_I18N_DOMAIN),                    // Page title
         __('B2Ncoin', B2NWC_I18N_DOMAIN),                        // Menu Title - lower corner of admin menu
         'administrator',                                        // Capability
-        'b2bwc-settings',                                        // Handle - First submenu's handle must be equal to parent's handle to avoid duplicate menu entry.
+        'b2nwc-settings',                                        // Handle - First submenu's handle must be equal to parent's handle to avoid duplicate menu entry.
         'B2NWC__render_general_settings_page',                   // Function
         plugins_url('/images/b2ncoin_16x.png', __FILE__)      // Icon URL
         );
 
     add_submenu_page (
-        'b2bwc-settings',                                        // Parent
+        'b2nwc-settings',                                        // Parent
         __("WooCommerce B2Ncoin Gateway", B2NWC_I18N_DOMAIN),                   // Page title
         __("General Settings", B2NWC_I18N_DOMAIN),               // Menu Title
         'administrator',                                        // Capability
-        'b2bwc-settings',                                        // Handle - First submenu's handle must be equal to parent's handle to avoid duplicate menu entry.
+        'b2nwc-settings',                                        // Handle - First submenu's handle must be equal to parent's handle to avoid duplicate menu entry.
         'B2NWC__render_general_settings_page'                    // Function
         );
 

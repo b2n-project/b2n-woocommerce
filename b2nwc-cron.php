@@ -7,7 +7,7 @@ https://github.com/b2n-project/b2n-woocommerce/
 
 // Include everything
 define('B2NWC_MUST_LOAD_WP',  '1');
-include (dirname(__FILE__) . '/b2bwc-include-all.php');
+include (dirname(__FILE__) . '/b2nwc-include-all.php');
 
 // Cpanel-scheduled cron job call
 if (@$_REQUEST['hardcron']=='1')
@@ -21,14 +21,14 @@ function B2NWC_cron_job_worker ($hardcron=false)
   global $wpdb;
 
 
-  $b2bwc_settings = B2NWC__get_settings ();
+  $b2nwc_settings = B2NWC__get_settings ();
 
   // status = "unused", "assigned", "used"
-  $b2n_payments_table_name     = $wpdb->prefix . 'b2bwc_b2n_payments';
+  $b2n_payments_table_name     = $wpdb->prefix . 'b2nwc_b2n_payments';
 
-  $funds_received_value_expires_in_secs = $b2bwc_settings['funds_received_value_expires_in_mins'] * 60;
-  $assigned_address_expires_in_secs     = $b2bwc_settings['assigned_address_expires_in_mins'] * 60;
-  $confirmations_required = $b2bwc_settings['confs_num'];
+  $funds_received_value_expires_in_secs = $b2nwc_settings['funds_received_value_expires_in_mins'] * 60;
+  $assigned_address_expires_in_secs     = $b2nwc_settings['assigned_address_expires_in_mins'] * 60;
+  $confirmations_required = $b2nwc_settings['confs_num'];
 
   $clean_address = NULL;
   $current_time = time();
@@ -72,8 +72,8 @@ function B2NWC_cron_job_worker ($hardcron=false)
       $address_request_array['b2n_address'] = $row_for_balance_check['b2n_address'];
       $address_request_array['block_index'] = $row_for_balance_check['index_in_wallet'];
 			$address_request_array['required_confirmations'] = $confirmations_required;
-			$address_request_array['api_timeout'] = $b2bwc_settings['blockchain_api_timeout_secs'];
-		  $balance_info_array = B2NWC__getreceivedbyaddress_info($address_request_array, $b2bwc_settings);
+			$address_request_array['api_timeout'] = $b2nwc_settings['blockchain_api_timeout_secs'];
+		  $balance_info_array = B2NWC__getreceivedbyaddress_info($address_request_array, $b2nwc_settings);
 
 		  $last_order_info = @$address_request_array['address_meta']['orders'][0];
 		  $row_id          = $row_for_balance_check['id'];
@@ -204,8 +204,8 @@ function B2NWC_cron_job_worker ($hardcron=false)
   //     $address_request_array['b2n_address'] = $row_for_balance_check['b2n_address'];
   //     $address_request_array['block_index'] = $row_for_balance_check['index_in_wallet'];
   //     $address_request_array['required_confirmations'] = $confirmations_required;
-  //     $address_request_array['api_timeout'] = $b2bwc_settings['blockchain_api_timeout_secs'];
-  //     $balance_info_array = B2NWC__getreceivedbyaddress_info($address_request_array, $b2bwc_settings);
+  //     $address_request_array['api_timeout'] = $b2nwc_settings['blockchain_api_timeout_secs'];
+  //     $balance_info_array = B2NWC__getreceivedbyaddress_info($address_request_array, $b2nwc_settings);
 
   //     $last_order_info = @$address_request_array['address_meta']['orders'][0];
   //     $row_id          = $row_for_balance_check['id'];

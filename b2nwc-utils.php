@@ -6,14 +6,14 @@ https://github.com/b2n-project/b2n-woocommerce/
 
 
 //===========================================================================
-function B2NWC__generate_new_B2Ncoin_payment_id ($b2bwc_settings=false, $order_info)
+function B2NWC__generate_new_B2Ncoin_payment_id ($b2nwc_settings=false, $order_info)
 {
   global $wpdb;
 
-  $b2n_payments_table_name = $wpdb->prefix . 'b2bwc_b2n_payments';
+  $b2n_payments_table_name = $wpdb->prefix . 'b2nwc_b2n_payments';
 
-  if (!$b2bwc_settings)
-    $b2bwc_settings = B2NWC__get_settings ();
+  if (!$b2nwc_settings)
+    $b2nwc_settings = B2NWC__get_settings ();
 
   $wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");
   $new_b2n_payment_id = $wallet_api->makePaymentId();
@@ -25,7 +25,7 @@ function B2NWC__generate_new_B2Ncoin_payment_id ($b2bwc_settings=false, $order_i
     $next_key_index = 0;
   }
 
-  $b2n_address = $b2bwc_settings['address'];
+  $b2n_address = $b2nwc_settings['address'];
 
   $address_request_array = array();
 
@@ -34,8 +34,8 @@ function B2NWC__generate_new_B2Ncoin_payment_id ($b2bwc_settings=false, $order_i
   $address_request_array['b2n_payment_id'] = $new_b2n_payment_id;
   $address_request_array['block_index'] = 100000; //@TODO variable for starting block to check for payment id
   $address_request_array['required_confirmations'] = 0;
-  $address_request_array['api_timeout'] = $b2bwc_settings['blockchain_api_timeout_secs'];
-  $ret_info_array = B2NWC__getreceivedbyaddress_info ($address_request_array, $b2bwc_settings);
+  $address_request_array['api_timeout'] = $b2nwc_settings['blockchain_api_timeout_secs'];
+  $ret_info_array = B2NWC__getreceivedbyaddress_info ($address_request_array, $b2nwc_settings);
   // $total_new_keys_generated ++;
 
   if ($ret_info_array['balance'] === false)
@@ -98,10 +98,10 @@ $ret_info_array = array (
   );
 */
 
-function B2NWC__getreceivedbyaddress_info ($address_request_array, $b2bwc_settings=false)
+function B2NWC__getreceivedbyaddress_info ($address_request_array, $b2nwc_settings=false)
 {
-	if (!$b2bwc_settings)
-  	$b2bwc_settings = B2NWC__get_settings ();
+	if (!$b2nwc_settings)
+  	$b2nwc_settings = B2NWC__get_settings ();
 
   $b2n_address            = $address_request_array['b2n_address'];
 	$b2n_payment_id         = $address_request_array['b2n_payment_id'];
@@ -178,9 +178,9 @@ function B2NWC__get_exchange_rate_per_B2Ncoin ($currency_code, $rate_retrieval_m
    if ($currency_code == 'B2N')
       return "1.00";   // 1:1
 
-	$b2bwc_settings = B2NWC__get_settings ();
-  $exchange_rate_type = $b2bwc_settings['exchange_rate_type'];
-  $exchange_multiplier = $b2bwc_settings['exchange_multiplier'];
+	$b2nwc_settings = B2NWC__get_settings ();
+  $exchange_rate_type = $b2nwc_settings['exchange_rate_type'];
+  $exchange_multiplier = $b2nwc_settings['exchange_multiplier'];
   if (!$exchange_multiplier)
     $exchange_multiplier = 1;
 
@@ -191,11 +191,11 @@ function B2NWC__get_exchange_rate_per_B2Ncoin ($currency_code, $rate_retrieval_m
 	$ticker_string_error = "<span style='color:red;background-color:#FFA'>WARNING: Cannot determine exchange rates (for '$currency_code')! {{{ERROR_MESSAGE}}} Make sure your PHP settings are configured properly and your server can (is allowed to) connect to external WEB services via PHP.</wspan>";
 
 
-	$this_currency_info = @$b2bwc_settings['exchange_rates'][$currency_code][$requested_cache_method_type];
+	$this_currency_info = @$b2nwc_settings['exchange_rates'][$currency_code][$requested_cache_method_type];
 	if ($this_currency_info && isset($this_currency_info['time-last-checked']))
 	{
 	  $delta = $current_time - $this_currency_info['time-last-checked'];
-	  if ($delta < (@$b2bwc_settings['cache_exchange_rates_for_minutes'] * 60))
+	  if ($delta < (@$b2nwc_settings['cache_exchange_rates_for_minutes'] * 60))
 	  {
 
 	     // Exchange rates cache hit
@@ -208,7 +208,7 @@ function B2NWC__get_exchange_rate_per_B2Ncoin ($currency_code, $rate_retrieval_m
 	  }
 	}
 
-  $exchange_rate = B2NWC__get_exchange_rate_from_cryptocompare($currency_code, $exchange_rate_type, $b2bwc_settings); 
+  $exchange_rate = B2NWC__get_exchange_rate_from_cryptocompare($currency_code, $exchange_rate_type, $b2nwc_settings); 
 
   // Save new currency exchange rate info in cache
   B2NWC__update_exchange_rate_cache ($currency_code, $requested_cache_method_type, $exchange_rate);
@@ -244,20 +244,20 @@ function B2NWC__function_not_exists ($fname) { return !function_exists($fname); 
 function B2NWC__update_exchange_rate_cache ($currency_code, $requested_cache_method_type, $exchange_rate)
 {
   // Save new currency exchange rate info in cache
-  $b2bwc_settings = B2NWC__get_settings ();   // Re-get settings in case other piece updated something while we were pulling exchange rate API's...
-  $b2bwc_settings['exchange_rates'][$currency_code][$requested_cache_method_type]['time-last-checked'] = time();
-  $b2bwc_settings['exchange_rates'][$currency_code][$requested_cache_method_type]['exchange_rate'] = $exchange_rate;
-  B2NWC__update_settings ($b2bwc_settings);
+  $b2nwc_settings = B2NWC__get_settings ();   // Re-get settings in case other piece updated something while we were pulling exchange rate API's...
+  $b2nwc_settings['exchange_rates'][$currency_code][$requested_cache_method_type]['time-last-checked'] = time();
+  $b2nwc_settings['exchange_rates'][$currency_code][$requested_cache_method_type]['exchange_rate'] = $exchange_rate;
+  B2NWC__update_settings ($b2nwc_settings);
 
 }
 //===========================================================================
 
 //===========================================================================
 // $rate_type: 'vwap' | 'realtime' | 'bestrate'
-function B2NWC__get_exchange_rate_from_cryptocompare ($currency_code, $rate_type, $b2bwc_settings)
+function B2NWC__get_exchange_rate_from_cryptocompare ($currency_code, $rate_type, $b2nwc_settings)
 {
  $source_url = "https://min-api.cryptocompare.com/data/price?fsym=B2N&tsyms=" . $currency_code;
- $result = @B2NWC__file_get_contents ($source_url, false, $b2bwc_settings['exchange_rate_api_timeout_secs']);
+ $result = @B2NWC__file_get_contents ($source_url, false, $b2nwc_settings['exchange_rate_api_timeout_secs']);
 
  $rate_obj = @json_decode(trim($result), true);
 
@@ -472,16 +472,16 @@ function B2NWC__send_email ($email_to, $email_from, $subject, $plain_body)
 function B2NWC__is_gateway_valid_for_use (&$ret_reason_message=NULL)
 {
   $valid = true;
-  $b2bwc_settings = B2NWC__get_settings ();
+  $b2nwc_settings = B2NWC__get_settings ();
 
 ////   'service_provider'                     =>  'local_wallet',    // 'blockchain_info'
 
   //----------------------------------
   // Validate settings
-  if ($b2bwc_settings['service_provider']=='local_wallet')
+  if ($b2nwc_settings['service_provider']=='local_wallet')
   {         
-          $b2bwc_settings = B2NWC__get_settings();
-          $address = $b2bwc_settings['address'];
+          $b2nwc_settings = B2NWC__get_settings();
+          $address = $b2nwc_settings['address'];
 
           try{
             $wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");

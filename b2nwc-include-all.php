@@ -19,7 +19,7 @@ if (!defined('B2NWC_PLUGIN_NAME'))
 
 
   // i18n plugin domain for language files
-  define('B2NWC_I18N_DOMAIN',       'b2bwc');
+  define('B2NWC_I18N_DOMAIN',       'b2nwc');
 
   }
 //---------------------------------------------------------------------------
@@ -44,10 +44,10 @@ if (defined('B2NWC_MUST_LOAD_WP') && !defined('WP_USE_THEMES') && !defined('ABSP
 // This loads necessary modules
 require_once (dirname(__FILE__) . '/libs/forknoteWalletdAPI.php');
 
-require_once (dirname(__FILE__) . '/b2bwc-cron.php');
-require_once (dirname(__FILE__) . '/b2bwc-utils.php');
-require_once (dirname(__FILE__) . '/b2bwc-admin.php');
-require_once (dirname(__FILE__) . '/b2bwc-render-settings.php');
-require_once (dirname(__FILE__) . '/b2bwc-b2ncoin-gateway.php');
+require_once (dirname(__FILE__) . '/b2nwc-cron.php');
+require_once (dirname(__FILE__) . '/b2nwc-utils.php');
+require_once (dirname(__FILE__) . '/b2nwc-admin.php');
+require_once (dirname(__FILE__) . '/b2nwc-render-settings.php');
+require_once (dirname(__FILE__) . '/b2nwc-b2ncoin-gateway.php');
 
 ?>

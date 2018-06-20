@@ -5,7 +5,7 @@ https://github.com/b2n-project/b2n-woocommerce/
 */
 
 // Include everything
-include (dirname(__FILE__) . '/b2bwc-include-all.php');
+include (dirname(__FILE__) . '/b2nwc-include-all.php');
 
 //===========================================================================
 // Global vars.
@@ -14,7 +14,7 @@ global $g_B2NWC__plugin_directory_url;
 $g_B2NWC__plugin_directory_url = plugins_url ('', __FILE__);
 
 global $g_B2NWC__cron_script_url;
-$g_B2NWC__cron_script_url = $g_B2NWC__plugin_directory_url . '/b2bwc-cron.php';
+$g_B2NWC__cron_script_url = $g_B2NWC__plugin_directory_url . '/b2nwc-cron.php';
 
 //===========================================================================
 
@@ -67,8 +67,8 @@ function B2NWC__GetPluginNameVersionEdition($please_donate = false) // false to 
 //===========================================================================
 function B2NWC__withdraw ()
 {
-    $b2bwc_settings = B2NWC__get_settings();
-    $address = $b2bwc_settings['address'];
+    $b2nwc_settings = B2NWC__get_settings();
+    $address = $b2nwc_settings['address'];
 
     try{
       $wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");
@@ -108,67 +108,67 @@ function B2NWC__get_settings ($key=false)
   global   $g_B2NWC__plugin_directory_url;
   global   $g_B2NWC__config_defaults;
 
-  $b2bwc_settings = get_option (B2NWC_SETTINGS_NAME);
-  if (!is_array($b2bwc_settings))
-    $b2bwc_settings = array();
+  $b2nwc_settings = get_option (B2NWC_SETTINGS_NAME);
+  if (!is_array($b2nwc_settings))
+    $b2nwc_settings = array();
 
   if ($key)
-    return (@$b2bwc_settings[$key]);
+    return (@$b2nwc_settings[$key]);
   else
-    return ($b2bwc_settings);
+    return ($b2nwc_settings);
 }
 //===========================================================================
 
 //===========================================================================
-function B2NWC__update_settings ($b2bwc_use_these_settings=false, $also_update_persistent_settings=false)
+function B2NWC__update_settings ($b2nwc_use_these_settings=false, $also_update_persistent_settings=false)
 {
-   if ($b2bwc_use_these_settings)
+   if ($b2nwc_use_these_settings)
       {
       // if ($also_update_persistent_settings)
-      //   B2NWC__update_persistent_settings ($b2bwc_use_these_settings);
+      //   B2NWC__update_persistent_settings ($b2nwc_use_these_settings);
 
-      update_option (B2NWC_SETTINGS_NAME, $b2bwc_use_these_settings);
+      update_option (B2NWC_SETTINGS_NAME, $b2nwc_use_these_settings);
       return;
       }
 
    global   $g_B2NWC__config_defaults;
 
    // Load current settings and overwrite them with whatever values are present on submitted form
-   $b2bwc_settings = B2NWC__get_settings();
+   $b2nwc_settings = B2NWC__get_settings();
 
    foreach ($g_B2NWC__config_defaults as $k=>$v)
       {
       if (isset($_POST[$k]))
          {
-         if (!isset($b2bwc_settings[$k]))
-            $b2bwc_settings[$k] = ""; // Force set to something.
-         B2NWC__update_individual_b2bwc_setting ($b2bwc_settings[$k], $_POST[$k]);
+         if (!isset($b2nwc_settings[$k]))
+            $b2nwc_settings[$k] = ""; // Force set to something.
+         B2NWC__update_individual_b2nwc_setting ($b2nwc_settings[$k], $_POST[$k]);
          }
       // If not in POST - existing will be used.
       }
 
-  update_option (B2NWC_SETTINGS_NAME, $b2bwc_settings);
+  update_option (B2NWC_SETTINGS_NAME, $b2nwc_settings);
 }
 //===========================================================================
 
 //===========================================================================
 // Takes care of recursive updating
-function B2NWC__update_individual_b2bwc_setting (&$b2bwc_current_setting, $b2bwc_new_setting)
+function B2NWC__update_individual_b2nwc_setting (&$b2nwc_current_setting, $b2nwc_new_setting)
 {
-   if (is_string($b2bwc_new_setting))
-      $b2bwc_current_setting = B2NWC__stripslashes ($b2bwc_new_setting);
-   else if (is_array($b2bwc_new_setting))  // Note: new setting may not exist yet in current setting: curr[t5] - not set yet, while new[t5] set.
+   if (is_string($b2nwc_new_setting))
+      $b2nwc_current_setting = B2NWC__stripslashes ($b2nwc_new_setting);
+   else if (is_array($b2nwc_new_setting))  // Note: new setting may not exist yet in current setting: curr[t5] - not set yet, while new[t5] set.
       {
       // Need to do recursive
-      foreach ($b2bwc_new_setting as $k=>$v)
+      foreach ($b2nwc_new_setting as $k=>$v)
          {
-         if (!isset($b2bwc_current_setting[$k]))
-            $b2bwc_current_setting[$k] = "";   // If not set yet - force set it to something.
-         B2NWC__update_individual_b2bwc_setting ($b2bwc_current_setting[$k], $v);
+         if (!isset($b2nwc_current_setting[$k]))
+            $b2nwc_current_setting[$k] = "";   // If not set yet - force set it to something.
+         B2NWC__update_individual_b2nwc_setting ($b2nwc_current_setting[$k], $v);
          }
       }
    else
-      $b2bwc_current_setting = $b2bwc_new_setting;
+      $b2nwc_current_setting = $b2nwc_new_setting;
 }
 //===========================================================================
 
@@ -180,22 +180,22 @@ function B2NWC__reset_partial_settings ($also_reset_persistent_settings=false)
    global   $g_B2NWC__config_defaults;
 
    // Load current settings and overwrite ones that are present on submitted form with defaults
-   $b2bwc_settings = B2NWC__get_settings();
+   $b2nwc_settings = B2NWC__get_settings();
 
    foreach ($_POST as $k=>$v)
       {
       if (isset($g_B2NWC__config_defaults[$k]))
          {
-         if (!isset($b2bwc_settings[$k]))
-            $b2bwc_settings[$k] = ""; // Force set to something.
-         B2NWC__update_individual_b2bwc_setting ($b2bwc_settings[$k], $g_B2NWC__config_defaults[$k]);
+         if (!isset($b2nwc_settings[$k]))
+            $b2nwc_settings[$k] = ""; // Force set to something.
+         B2NWC__update_individual_b2nwc_setting ($b2nwc_settings[$k], $g_B2NWC__config_defaults[$k]);
          }
       }
 
-  update_option (B2NWC_SETTINGS_NAME, $b2bwc_settings);
+  update_option (B2NWC_SETTINGS_NAME, $b2nwc_settings);
 
   // if ($also_reset_persistent_settings)
-  //   B2NWC__update_persistent_settings ($b2bwc_settings);
+  //   B2NWC__update_persistent_settings ($b2nwc_settings);
 }
 //===========================================================================
 
@@ -241,14 +241,14 @@ function B2NWC__stripslashes (&$val)
                             "xused"       - address was used (touched with funds) by unknown entity outside of this application. No metadata is present for this address, will not be able to correlated it with any order.
                             "unknown"     - new address was generated but cannot retrieve balance due to blockchain API failure.
 */
-function B2NWC__create_database_tables ($b2bwc_settings)
+function B2NWC__create_database_tables ($b2nwc_settings)
 {
   global $wpdb;
 
-  $b2bwc_settings = B2NWC__get_settings();
+  $b2nwc_settings = B2NWC__get_settings();
   $must_update_settings = false;
 
-  $b2n_payments_table_name             = $wpdb->prefix . 'b2bwc_b2n_payments';
+  $b2n_payments_table_name             = $wpdb->prefix . 'b2nwc_b2n_payments';
 
   if($wpdb->get_var("SHOW TABLES LIKE '$b2n_payments_table_name'") != $b2n_payments_table_name)
       $b_first_time = true;
@@ -286,7 +286,7 @@ function B2NWC__delete_database_tables ()
 {
   global $wpdb;
 
-  $b2n_payments_table_name    = $wpdb->prefix . 'b2bwc_b2n_payments';
+  $b2n_payments_table_name    = $wpdb->prefix . 'b2nwc_b2n_payments';
 
   $wpdb->query("DROP TABLE IF EXISTS `$b2n_payments_table_name`");
 }

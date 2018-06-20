@@ -48,8 +48,8 @@ function B2NWC__plugins_loaded__load_B2Ncoin_gateway ()
 			$this->method_title     = __( 'B2Ncoin', 'woocommerce' );
 
 			// Load B2NWC settings.
-			$b2bwc_settings = B2NWC__get_settings ();
-			$this->service_provider = $b2bwc_settings['service_provider']; // This need to be before $this->init_settings otherwise it generate PHP Notice: "Undefined property: B2NWC_B2Ncoin::$service_provider" down below.
+			$b2nwc_settings = B2NWC__get_settings ();
+			$this->service_provider = $b2nwc_settings['service_provider']; // This need to be before $this->init_settings otherwise it generate PHP Notice: "Undefined property: B2NWC_B2Ncoin::$service_provider" down below.
 
 			// Load the form fields.
 			$this->init_form_fields();
@@ -59,7 +59,7 @@ function B2NWC__plugins_loaded__load_B2Ncoin_gateway ()
 			$this->title 		= $this->settings['title'];	// The title which the user is shown on the checkout – retrieved from the settings which init_settings loads.
 			$this->B2Ncoin_addr_merchant = $this->settings['B2Ncoin_addr_merchant'];	// Forwarding address where all product payments will aggregate.
 			
-			$this->confs_num = $b2bwc_settings['confs_num'];  //$this->settings['confirmations'];
+			$this->confs_num = $b2nwc_settings['confs_num'];  //$this->settings['confirmations'];
 			$this->description 	= $this->settings['description'];	// Short description about the gateway which is shown on checkout.
 			$this->instructions = $this->settings['instructions'];	// Detailed payment instructions for the buyer.
 			$this->instructions_multi_payment_str  = __('You may send payments from multiple accounts to reach the total required.', 'woocommerce');
@@ -103,8 +103,8 @@ function B2NWC__plugins_loaded__load_B2Ncoin_gateway ()
 	    	else if ($this->service_provider=='local_wallet')
 	    	{
 	    		$wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");
-	    		$b2bwc_settings = B2NWC__get_settings();
-          		$address = $b2bwc_settings['address'];
+	    		$b2nwc_settings = B2NWC__get_settings();
+          		$address = $b2nwc_settings['address'];
 	    		if (!$address)
 	    		{
 		    		$reason_message = __("Please specify Wallet Address in B2Ncoin plugin settings.", 'woocommerce');
@@ -191,7 +191,7 @@ function B2NWC__plugins_loaded__load_B2Ncoin_gateway ()
 	    	//-----------------------------------
 	    	// Payment instructions
 	    	$payment_instructions = '
-<table class="b2bwc-payment-instructions-table" id="b2bwc-payment-instructions-table">
+<table class="b2nwc-payment-instructions-table" id="b2nwc-payment-instructions-table">
   <tr class="bpit-table-row">
     <td colspan="2">' . __('Please send your B2Ncoin payment as follows:', 'woocommerce') . '</td>
   </tr>
@@ -344,7 +344,7 @@ function B2NWC__plugins_loaded__load_B2Ncoin_gateway ()
 	     */
 		function process_payment ($order_id)
 		{
-      $b2bwc_settings = B2NWC__get_settings ();
+      $b2nwc_settings = B2NWC__get_settings ();
 			$order = new WC_Order ($order_id);
 
 			// TODO: Implement CRM features within store admin dashboard
@@ -355,7 +355,7 @@ function B2NWC__plugins_loaded__load_B2Ncoin_gateway ()
 			$order_meta['b2n_s_addr'] = $order->get_formatted_shipping_address();
 			$order_meta['b2n_b_email'] = $order->billing_email;
 			$order_meta['b2n_currency'] = $order->order_currency;
-			$order_meta['b2n_settings'] = $b2bwc_settings;
+			$order_meta['b2n_settings'] = $b2nwc_settings;
 			$order_meta['b2n_store'] = plugins_url ('' , __FILE__);
 
 
@@ -400,9 +400,9 @@ function B2NWC__plugins_loaded__load_B2Ncoin_gateway ()
 
                $wallet_api = New ForkNoteWalletd("http://127.0.0.1:19070");
 
-               $b2ncoin_payment_id = B2NWC__generate_new_B2Ncoin_payment_id($b2bwc_settings, $order_info);
+               $b2ncoin_payment_id = B2NWC__generate_new_B2Ncoin_payment_id($b2nwc_settings, $order_info);
 
-               $b2ncoin_address = $b2bwc_settings['address'];
+               $b2ncoin_address = $b2nwc_settings['address'];
 
 
    			B2NWC__log_event (__FILE__, __LINE__, "     Generated unique B2Ncoin Payment ID: '{$b2ncoin_payment_id}' Address: '{$b2ncoin_address}' for order_id " . $order_id);
@@ -674,8 +674,8 @@ function B2NWC__process_payment_completed_for_order ($order_id, $B2Ncoins_paid=f
 
 	  $order->payment_complete();
 
-    $b2bwc_settings = B2NWC__get_settings();
-		if ($b2bwc_settings['autocomplete_paid_orders'])
+    $b2nwc_settings = B2NWC__get_settings();
+		if ($b2nwc_settings['autocomplete_paid_orders'])
 		{
   		// Ensure order is completed.
 			$order->update_status('completed', __('Order marked as completed according to B2Ncoin plugin settings', 'woocommerce'));
